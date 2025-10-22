@@ -5,6 +5,9 @@ from fastapi.security import OAuth2PasswordBearer
 from database import Base, engine
 from routes.auth_routes import router as auth_router
 from routes.generation_routes import router as gen_router
+from fastapi.staticfiles import StaticFiles
+
+
 
 # 👇 Add this
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
@@ -12,6 +15,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Studio Backend")
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 
 app.add_middleware(
     CORSMiddleware,

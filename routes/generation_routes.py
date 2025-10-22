@@ -29,6 +29,8 @@ def create_generation(
     filepath = os.path.join(UPLOAD_DIR, filename)
     with open(filepath, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    filepath = filepath.replace("\\", "/")
     gen = Generation(user_id=current_user.id, prompt=prompt, image_path=filepath)
     db.add(gen)
     db.commit()

@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from database import SessionLocal
 from models import User
 from auth import get_password_hash, verify_password, create_access_token
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -14,8 +15,15 @@ def get_db():
     finally:
         db.close()
 
+class AuthIn(BaseModel):
+    username: str
+    password: str
+
 @router.post("/register")
-def register(username: str, password: str, db: Session = Depends(get_db)):
+def register(payload: AuthIn, db: Session = Depends(get_db)):
+    username = payload.username
+    password = payload.password
+
     if db.query(User).filter(User.username == username).first():
         raise HTTPException(status_code=400, detail="Username already exists")
     hashed_pw = get_password_hash(password)
@@ -26,7 +34,10 @@ def register(username: str, password: str, db: Session = Depends(get_db)):
     return {"message": "User created successfully"}
 
 @router.post("/login")
-def login(username: str, password: str, db: Session = Depends(get_db)):
+def login(payload: AuthIn, db: Session = Depends(get_db)):
+    username = payload.username
+    password = payload.password
+    
     user = db.query(User).filter(User.username == username).first()
     if not user or not verify_password(password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
