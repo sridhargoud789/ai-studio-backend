@@ -1,27 +1,18 @@
-# main.py
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from database import Base, engine
-from routes import auth, generation
+# models.py
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.sql import func
+from database import Base
 
-Base.metadata.create_all(bind=engine)
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password = Column(String)
 
-app = FastAPI(title="AI Studio Backend")
-
-# Allow frontend (local + deployed)
-origins = [
-    "http://localhost:3000",       # local Next.js
-    "https://your-frontend.vercel.app",  # replace with your deployed frontend
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Include routes
-app.include_router(auth.router)
-app.include_router(generation.router)
+class Generation(Base):
+    __tablename__ = "generations"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    prompt = Column(String)
+    image_path = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

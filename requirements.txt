@@ -1,6 +1,6 @@
 annotated-types==0.7.0
 anyio==4.11.0
-bcrypt==5.0.0
+bcrypt==4.0.1
 cffi==2.0.0
 click==8.3.0
 colorama==0.4.6
@@ -10,7 +10,7 @@ fastapi==0.119.1
 greenlet==3.2.4
 h11==0.16.0
 idna==3.11
-passlib==1.7.4
+passlib[bcrypt]==1.7.4
 pyasn1==0.6.1
 pycparser==2.23
 pydantic==2.12.3
