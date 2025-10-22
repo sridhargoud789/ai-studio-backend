@@ -1,0 +1,15 @@
+# render.yaml
+services:
+  - type: web
+    name: ai-studio-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./start.sh
+    envVars:
+      - key: SECRET_KEY
+        value: 35227e7da116ecacf9cb2909ee2f4bf22da121fbdfd41909c0d376e04d784fb0
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 60
